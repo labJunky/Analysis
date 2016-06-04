@@ -1,0 +1,6 @@
+port = 3333;
+sockcon = pnet('tcpsocket',port);
+con=[];
+while con==-1
+    con = pnet(sockcon, 'tcplisten');
+end

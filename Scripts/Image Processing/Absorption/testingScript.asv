@@ -1,0 +1,63 @@
+% Set Directory and Load images
+date='20160413';
+dataPath='Y:\Data\University stuff\NTU\Data';
+aP = [dataPath,'\',date,'\',date];
+lP = aP;
+mtfolder = [dataPath,'\',date,'\matlab'];
+mkdir(mtfolder);
+iP = [mtfolder,'\',date];
+resultsPath = [dataPath,'\',date,'\secCoilLifetime.txt'];
+
+crop = [200,1100,10,1000];
+ROI = [10,900,10,900];
+
+j=1;
+%677 - 1907
+i=89:2:107;
+k=12500;
+for x=0265:2:0287; 
+    if j==1;
+        tof=1;
+    elseif j==2;
+        tof=1;
+    elseif j==3;
+        tof=1;
+    else tof=1;
+    end
+    tof=k;
+    imageNumber = x;
+    if imageNumber == 99;
+        prefix = '_00';
+        prefix2 = '_0';
+    elseif imageNumber ==9;
+        prefix = '_000';
+        prefix2 = '_00';
+    elseif imageNumber ==999;
+        prefix = '_0';
+        prefix2 = '_';
+    elseif imageNumber < 10;
+        prefix = '_000';
+        prefix2 = prefix;
+    elseif imageNumber < 100;
+        prefix = '_00';
+        prefix2 = prefix;
+    elseif imageNumber >= 1000;
+        prefix = '_';
+        prefix2 = prefix;
+    else prefix = '_0'; prefix2= prefix;
+    end
+    atomsP = [aP, prefix,int2str(imageNumber),'.tif'];
+    laserP = [lP, prefix2,int2str(imageNumber+1),'.tif'];  
+    imagePath = [iP, prefix,int2str(imageNumber),'.tif'];
+
+    atoms = double(imread(atomsP));
+    laser = double(imread(laserP));
+
+    [atomNumberX, atomNumberY, sizeX, sizeY, centreX, centreY, opticalDensity, xSize] = Absorption_2( atoms, laser, crop, ROI,1,imagePath);
+    a=dir(atomsP);
+    time = a.date;
+    
+    %writeAnalysisResultsToFile(resultsPath, time, int2str(imageNumber), [tof, k, atomNumberX, atomNumberY, sizeX, sizeY, xSize, centreX, centreY])
+    j=j+1;
+    k=k+1000;
+end
